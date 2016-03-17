@@ -58,6 +58,36 @@ var albumMarconi = {
     ]
 };
 
+var albumBeers = {
+    title: 'My Favorites',
+    artist: 'Various',
+    label: 'Tasty',
+    year: '2016',
+    albumArtUrl: 'assets/images/album_covers/15.png',
+    songs: [
+        {
+            title: 'Two Hearted',
+            duration: '1:00'
+        },
+        {
+            title: '60 Minute IPA',
+            duration: '4:00'
+        },
+        {
+            title: 'Huma Lupa Licious',
+            duration: '3:00'
+        },
+        {
+            title: 'Allday IPA',
+            duration: '5:00'
+        },
+        {
+            title: 'Perrin Grapefruit IPA',
+            duration: '2:00'
+        }
+    ]
+};
+
 var createSongRow = function (songNumber, songName, songLength) {
     var template =
         '<tr class="album-view-song-item">'
@@ -91,4 +121,17 @@ var setCurrentAlbum = function (album) {
 
 window.onload = function() {
     setCurrentAlbum(albumPicasso);
+
+    var albumImage = document.getElementsByClassName('album-cover-art')[0];
+    var albums = [albumPicasso, albumMarconi, albumBeers];
+    var i = 1;
+    albumImage.addEventListener('click', function(event) {
+        if (albumImage.click) {
+            setCurrentAlbum(albums[i]);
+            i++;
+            if ( i == albums.length) {
+                i = 0;
+            }
+        }
+    });
 };
