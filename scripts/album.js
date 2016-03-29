@@ -25,13 +25,13 @@ var createSongRow = function (songNumber, songName, songLength) {
         } else if (currentlyPlayingSongNumber === songNumber) {
             if (currentSoundFile.isPaused()) {
                 currentSoundFile.play();
-                $(this).html(playButtonTemplate);
+                $(this).html(pauseButtonTemplate);
                 updatePlayerBarSong();
             } else {
                 currentSoundFile.pause();
-                $(this).html(pauseButtonTemplate);
+                $(this).html(playButtonTemplate);
                 setSong(songNumber);
-                updatePlayerBarSong();
+                $('.main-controls .play-pause').html(playerBarPlayButton);
             }
             
         }
