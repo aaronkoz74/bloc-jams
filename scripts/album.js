@@ -94,6 +94,10 @@ var setCurrentAlbum = function (album) {
     }
 };
 
+var setCUrrentTimeInPlayerBar = function(currentTime) {
+    $('.current-time').text(currentTime);  
+};
+
 var updateSeekBarWhileSongPlays = function() {
     if (currentSoundFile) {
         currentSoundFile.bind('timeupdate', function(event) {
@@ -101,6 +105,7 @@ var updateSeekBarWhileSongPlays = function() {
             var $seekBar = $('.seek-control .seek-bar');
             
             updateSeekPercentage($seekBar, seekBarFillRatio);
+            setCUrrentTimeInPlayerBar(this.getTime());
         });
     }  
 };
