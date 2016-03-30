@@ -3,7 +3,7 @@ var createSongRow = function (songNumber, songName, songLength) {
         '<tr class="album-view-song-item">'
         + ' <td class="song-item-number" data-song-number="' + songNumber + '">' + songNumber + '</td>'
         + ' <td class="song-item-title">' + songName + '</td>'
-        + ' <td class="song-item-duration">' + songLength + '</td>'
+        + ' <td class="song-item-duration">' + filterTimeCode(songLength) + '</td>'
         + '</tr>';
     
     var clickHandler = function () {
@@ -94,8 +94,19 @@ var setCurrentAlbum = function (album) {
     }
 };
 
-var setCUrrentTimeInPlayerBar = function(currentTime) {
-    $('.current-time').text(currentTime);  
+var filterTimeCode = function(timeInSeconds) {
+    var timeInSeconds = parseFloat(timeInSeconds);
+    var wholeMinutes = Math.floor(timeInSeconds / 60);
+    var wholeSeconds = ('0' + Math.floor(timeInSeconds % 60)).slice(-2);
+    return wholeMinutes + ':' + wholeSeconds;
+};
+
+var setCurrentTimeInPlayerBar = function(currentTime) {
+    $('.current-time').text(filterTimeCode(currentTime));  
+};
+
+var setTotalTimeInPlayerBar = function(totalTime) {
+    $('.total-time').text(filterTimeCode(totalTime));  
 };
 
 var updateSeekBarWhileSongPlays = function() {
@@ -105,7 +116,7 @@ var updateSeekBarWhileSongPlays = function() {
             var $seekBar = $('.seek-control .seek-bar');
             
             updateSeekPercentage($seekBar, seekBarFillRatio);
-            setCUrrentTimeInPlayerBar(this.getTime());
+            setCurrentTimeInPlayerBar(this.getTime());
         });
     }  
 };
@@ -261,6 +272,7 @@ var updatePlayerBarSong = function() {
     $('.player-bar .currently-playing .artist-song-mobile').text(currentSongFromAlbum.title + " - " + currentAlbum.artist);
     $('.player-bar .currently-playing .artist-name').text(currentAlbum.artist);
     $('.main-controls .play-pause').html(playerBarPauseButton);
+    setTotalTimeInPlayerBar(currentSongFromAlbum.duration);
 };
 
 var playButtonTemplate = '<a class="album-song-button"><span class="ion-play"></span></a>';
