@@ -9,13 +9,6 @@ var createSongRow = function (songNumber, songName, songLength) {
     var clickHandler = function () {
 
         var songNumber = parseInt($(this).attr('data-song-number'));
-        
-        $('.volume .fill').css("width", function() {
-            return (currentVolume + '%');
-        });
-        $('.volume .thumb').css("left", function() {
-            return (currentVolume + '%');
-        });
 
         if (currentlyPlayingSongNumber !== null) {
              // Revert to song number for currently playing song because user started playing new song.
@@ -25,10 +18,15 @@ var createSongRow = function (songNumber, songName, songLength) {
 
         if (currentlyPlayingSongNumber !== songNumber) {
             // Switch from Play -> Pause button to indicate new song is playing.
-            $(this).html(pauseButtonTemplate);
             setSong(songNumber);
             currentSoundFile.play();
             updateSeekBarWhileSongPlays();
+            currentSongFromAlbum = currentAlbum.songs[songNumber - 1];
+            
+            $('.volume .fill').width(currentVolume + '%');
+            $('.volume .thumb').css({left: currentVolume + '%'});
+            
+            $(this).html(pauseButtonTemplate);
             updatePlayerBarSong();
         } else if (currentlyPlayingSongNumber === songNumber) {
             if (currentSoundFile.isPaused()) {
@@ -37,9 +35,9 @@ var createSongRow = function (songNumber, songName, songLength) {
                 $(this).html(pauseButtonTemplate);
                 updatePlayerBarSong();
             } else {
-                currentSoundFile.pause();
+                var currentSongPosition = currentSoundFile.getTime();
+                 currentSoundFile.setTime(currentSongPosition).pause();
                 $(this).html(playButtonTemplate);
-                setSong(songNumber);
                 $('.main-controls .play-pause').html(playerBarPlayButton);
             }
             
@@ -147,7 +145,7 @@ var setupSeekBars = function() {
             if ($seekBarParent == 'seek-control') {
             seek(currentSoundFile.getDuration() * seekBarFillRatio);
             } else {
-                setVolume(seekBarFillRatio * 100);
+                setVolume(seekBarFillRatio);
             }
             
             updateSeekPercentage($seekBar, seekBarFillRatio);
@@ -163,6 +161,7 @@ var setupSeekBars = function() {
 var setSong = function(songNumber) {
     if (currentSoundFile) {
         currentSoundFile.stop();
+        currentVolume = currentSoundFile.getVolume();
     }
     
     currentlyPlayingSongNumber = parseInt(songNumber);
